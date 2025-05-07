@@ -130,41 +130,6 @@ func setupRouter(middleware *ssoclient.Middleware, handlers *ssoclient.Handlers)
 }
 ```
 
-## Database Schema
-
-The library requires the following tables:
-
-```sql
--- Users table
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- SSH Keys table
-CREATE TABLE ssh_keys (
-    id SERIAL PRIMARY KEY,
-    private_key TEXT NOT NULL,
-    public_key TEXT NOT NULL,
-    status VARCHAR(20) NOT NULL,
-    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- User Access Tokens table
-CREATE TABLE user_access_tokens (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    jti VARCHAR(255) NOT NULL UNIQUE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-```
-
 ## Session Management
 
 The library implements a sliding window session mechanism:
