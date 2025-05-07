@@ -180,14 +180,5 @@ The library exposes metrics for monitoring:
 
 1. Always use HTTPS in production
 2. Secure Redis with authentication and encryption
-3. Regularly rotate SSH keys
-4. Monitor for suspicious authentication patterns
-5. Keep all dependencies updated
-
-## Contributing
-
-Contributions are welcome! Please read our contributing guidelines and submit pull requests.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details. 
+3. Monitor for suspicious authentication patterns
+4. Keep all dependencies updated
