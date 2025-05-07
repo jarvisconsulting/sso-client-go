@@ -19,7 +19,6 @@ type SshKey struct {
 	UpdatedAt     time.Time `gorm:"autoUpdateTime"`
 }
 
-// UserAccessToken represents the relationship between users and their JWT tokens
 type UserAccessToken struct {
 	ID        uint      `gorm:"primaryKey"`
 	UserID    uint      `gorm:"index;not null"`
