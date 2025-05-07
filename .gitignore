@@ -1,8 +1,4 @@
+examples/
+
 .idea
 .vscode
-config.env
-config/*.env
-config.dev
-config.test
-config.dev.env
-config/practical-truck-397112-c6772748b2d9.json
