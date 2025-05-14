@@ -45,16 +45,12 @@ func main() {
     // Configure the client
     cfg := &config.Config{
         // SSO Server Configuration
-        SSOUrl:       "https://sso.example.com",
-        ClientID:     "your-client-id",
         CallbackURL:  "http://localhost:8080/auth/callback",
         SignOutURL:   "http://localhost:8080/auth/signout",
-        PublicKeyAPI: "https://sso.example.com/api/public-key",
 
         // Application URLs
         RootURL:     "http://localhost:8080",
         SignInURL:   "http://localhost:8080/auth/signin",
-        FrontendURL: "http://localhost:3000",
 
         // Redis Configuration
         RedisURI:      "redis://:password@localhost:6379/0",

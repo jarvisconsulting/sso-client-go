@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/yourusername/sso-client-go/pkg/auth"
-	"github.com/yourusername/sso-client-go/pkg/config"
-	"github.com/yourusername/sso-client-go/pkg/middleware"
-	"github.com/yourusername/sso-client-go/pkg/models"
-	"github.com/yourusername/sso-client-go/pkg/store"
+	"github.com/jarvisconsulting/sso-client-go/pkg/auth"
+	"github.com/jarvisconsulting/sso-client-go/pkg/config"
+	"github.com/jarvisconsulting/sso-client-go/pkg/middleware"
+	"github.com/jarvisconsulting/sso-client-go/pkg/models"
+	"github.com/jarvisconsulting/sso-client-go/pkg/store"
 )
 
 type Client struct {
@@ -56,10 +56,8 @@ func (c *Client) WithRepository(primaryDB *gorm.DB, secondaryDB *gorm.DB) *Clien
 
 	handlerConfig := &auth.Config{
 		SignInURL:   c.config.SignInURL,
-		SignOutURL:  c.config.SignOutURL,
 		CallbackURL: c.config.CallbackURL,
 		RootURL:     c.config.RootURL,
-		FrontendURL: c.config.FrontendURL,
 	}
 
 	c.authService = auth.NewAuthService(userRepo, c.config, c.sessionStore)

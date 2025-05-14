@@ -7,9 +7,9 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	"github.com/yourusername/sso-client-go/pkg/config"
-	"github.com/yourusername/sso-client-go/pkg/models"
-	"github.com/yourusername/sso-client-go/pkg/store"
+	"github.com/jarvisconsulting/sso-client-go/pkg/config"
+	"github.com/jarvisconsulting/sso-client-go/pkg/models"
+	"github.com/jarvisconsulting/sso-client-go/pkg/store"
 )
 
 const (
@@ -173,19 +173,33 @@ func (s *AuthService) HandleCallback(params map[string]string) (uint, error) {
 		return 0, fmt.Errorf("invalid token: %w", err)
 	}
 
-	// Extract claims only from valid tokens
+	fmt.Printf("Token claims: %+v\n", token.Claims)
+
+	var jti string
+
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return 0, errors.New("invalid claims format")
 	}
 
-	/*
-		1. check what all is present in the claims
-	*/
+	if jtiClaim, exists := claims["jti"]; exists {
+		if jtiStr, ok := jtiClaim.(string); ok {
+			jti = jtiStr
+			fmt.Printf("Found JTI in jti claim: %s\n", jti)
+		}
+	} else if len(claims) == 1 {
+		for k, v := range claims {
+			fmt.Printf("Checking claim key: %s, value: %v\n", k, v)
+			if strVal, ok := v.(string); ok {
+				jti = strVal
+				fmt.Printf("Found JTI as direct string value: %s\n", jti)
+				break
+			}
+		}
+	}
 
-	jti, ok := claims["jti"].(string)
-	if !ok {
-		return 0, errors.New("jti not found or invalid in token claims")
+	if jti == "" {
+		return 0, errors.New("could not extract JTI from token - token must contain either a jti claim or a single string value")
 	}
 
 	userID, err := s.userRepo.FindByJTI(jti)

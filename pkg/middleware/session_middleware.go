@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
-	"github.com/yourusername/sso-client-go/pkg/config"
+	"github.com/jarvisconsulting/sso-client-go/pkg/config"
 )
 
 type SessionMiddleware struct {

@@ -4,7 +4,7 @@ import (
 	redistore "github.com/boj/redistore"
 	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/sessions"
-	"github.com/yourusername/sso-client-go/pkg/config"
+	"github.com/jarvisconsulting/sso-client-go/pkg/config"
 )
 
 type SessionStore interface {

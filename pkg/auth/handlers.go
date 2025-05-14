@@ -18,7 +18,6 @@ type Config struct {
 	SignOutURL  string
 	CallbackURL string
 	RootURL     string
-	FrontendURL string
 }
 
 func NewHandler(authService *AuthService, config *Config) *Handler {
@@ -47,12 +46,8 @@ func (h *Handler) SignOut(c *gin.Context) {
 		return
 	}
 
-	frontendURL := h.config.FrontendURL
-	if frontendURL == "" {
-		frontendURL = "http://localhost:3001"
-	}
-	log.Printf("Redirecting to frontend after signout: %s", frontendURL)
-	c.Redirect(http.StatusFound, frontendURL)
+	log.Printf("Redirecting to frontend after signout: %s", h.config.SignInURL)
+	c.Redirect(http.StatusFound, h.config.SignInURL)
 }
 
 func (h *Handler) Callback(c *gin.Context) {
@@ -83,14 +78,9 @@ func (h *Handler) Callback(c *gin.Context) {
 		return
 	}
 
-	idToken := params["id_token"]
-	frontendURL := h.config.FrontendURL
-	if frontendURL == "" {
-		frontendURL = "http://localhost:3001"
-	}
-	redirectURL := frontendURL + "?token=" + url.QueryEscape(idToken)
+	redirectURL := h.config.RootURL
 	if endpoint != "" {
-		redirectURL += "&endpoint=" + url.QueryEscape(endpoint)
+		redirectURL += "?endpoint=" + url.QueryEscape(endpoint)
 	}
 
 	c.Redirect(http.StatusFound, redirectURL)

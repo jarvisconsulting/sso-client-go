@@ -1,4 +1,4 @@
-module github.com/yourusername/sso-client-go
+module github.com/jarvisconsulting/sso-client-go
 
 go 1.19
 

@@ -1,7 +1,9 @@
 package ssoclient
 
 import (
-	"github.com/yourusername/sso-client-go/pkg/models"
+	"errors"
+
+	"github.com/jarvisconsulting/sso-client-go/pkg/models"
 	"gorm.io/gorm"
 )
 
@@ -91,48 +93,32 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 
 func (r *UserRepository) FindByJTI(jti string) (uint, error) {
 	var token models.UserAccessToken
-	var lastErr error
 
-	// Try primary DB
-	result := r.primaryDB.Where("jti = ?", jti).First(&token)
-	if result.Error == nil {
-		return token.UserID, nil
-	}
-	lastErr = result.Error
-
-	// Try secondary DB if available
-	if r.secondaryDB != nil {
-		result = r.secondaryDB.Where("jti = ?", jti).First(&token)
-		if result.Error == nil {
-			return token.UserID, nil
-		}
-		lastErr = result.Error
+	if r.secondaryDB == nil {
+		return 0, errors.New("secondary database not available")
 	}
 
-	return 0, lastErr
+	result := r.secondaryDB.Where("jti = ?", jti).First(&token)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+
+	return token.UserID, nil
 }
 
 func (r *UserRepository) GetLastSshKey() (*models.SshKey, error) {
 	var sshKey models.SshKey
-	var lastErr error
 
-	// Try primary DB
-	result := r.primaryDB.Order("id desc").First(&sshKey)
-	if result.Error == nil {
-		return &sshKey, nil
-	}
-	lastErr = result.Error
-
-	// Try secondary DB if available
-	if r.secondaryDB != nil {
-		result = r.secondaryDB.Order("id desc").First(&sshKey)
-		if result.Error == nil {
-			return &sshKey, nil
-		}
-		lastErr = result.Error
+	if r.secondaryDB == nil {
+		return nil, errors.New("secondary database not available")
 	}
 
-	return nil, lastErr
+	result := r.secondaryDB.Order("id desc").First(&sshKey)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &sshKey, nil
 }
 
 func (r *UserRepository) CreateAccessToken(userID uint, jti string) error {

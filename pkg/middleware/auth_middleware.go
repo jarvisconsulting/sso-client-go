@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/yourusername/sso-client-go/pkg/auth"
-	"github.com/yourusername/sso-client-go/pkg/store"
+	"github.com/jarvisconsulting/sso-client-go/pkg/auth"
+	"github.com/jarvisconsulting/sso-client-go/pkg/store"
 )
 
 type AuthMiddleware struct {
