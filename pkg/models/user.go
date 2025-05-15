@@ -14,7 +14,7 @@ type User struct {
 
 type SshKey struct {
 	ID            uint      `gorm:"primaryKey"`
-	PrivateRsaKey string    `gorm:"column:private_key;not null"`
+	PrivateRsaKey string    `gorm:"column:key;not null"`
 	CreatedAt     time.Time `gorm:"autoCreateTime"`
 	UpdatedAt     time.Time `gorm:"autoUpdateTime"`
 }
