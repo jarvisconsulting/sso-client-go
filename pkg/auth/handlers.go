@@ -62,6 +62,15 @@ func (h *Handler) Callback(c *gin.Context) {
 		log.Printf("Using id_token for authentication")
 	}
 
+	redirectFor := c.Query("redirect_for")
+	if redirectFor != "" {
+		params["redirect_for"] = redirectFor
+		log.Printf("Using redirect_for for authentication")
+	} else {
+		params["redirect_for"] = c.Query("redirect_for")
+		log.Printf("Using redirect_for for authentication")
+	}
+
 	endpoint := c.Query("endpoint")
 
 	userID, err := h.authService.HandleCallback(params)
@@ -79,8 +88,19 @@ func (h *Handler) Callback(c *gin.Context) {
 	}
 
 	redirectURL := h.config.RootURL
+	queryParams := make([]string, 0)
 	if endpoint != "" {
-		redirectURL += "?endpoint=" + url.QueryEscape(endpoint)
+		queryParams = append(queryParams, "endpoint="+url.QueryEscape(endpoint))
+	}
+	if redirectFor != "" {
+		queryParams = append(queryParams, "redirect_for="+url.QueryEscape(redirectFor))
+	}
+	
+	if len(queryParams) > 0 {
+		redirectURL += "?" + queryParams[0]
+		for i := 1; i < len(queryParams); i++ {
+			redirectURL += "&" + queryParams[i]
+		}
 	}
 
 	c.Redirect(http.StatusFound, redirectURL)
