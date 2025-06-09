@@ -71,6 +71,7 @@ func (h *Handler) Callback(c *gin.Context) {
 		log.Printf("Using redirect_for for authentication")
 	}
 
+	isMobile := redirectFor == "mobile" || redirectFor == "is_web_app"
 	endpoint := c.Query("endpoint")
 
 	userID, err := h.authService.HandleCallback(params)
@@ -80,7 +81,7 @@ func (h *Handler) Callback(c *gin.Context) {
 		return
 	}
 
-	err = h.authService.SignInUser(c.Writer, c.Request, userID)
+	err = h.authService.SignInUser(c.Writer, c.Request, userID, isMobile)
 	if err != nil {
 		log.Printf("Failed to sign in user: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to sign in user"})
@@ -94,13 +95,6 @@ func (h *Handler) Callback(c *gin.Context) {
 	}
 	if redirectFor != "" {
 		queryParams = append(queryParams, "redirect_for="+url.QueryEscape(redirectFor))
-	}
-	
-	if len(queryParams) > 0 {
-		redirectURL += "?" + queryParams[0]
-		for i := 1; i < len(queryParams); i++ {
-			redirectURL += "&" + queryParams[i]
-		}
 	}
 
 	c.Redirect(http.StatusFound, redirectURL)

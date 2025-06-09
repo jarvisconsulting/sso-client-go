@@ -14,6 +14,7 @@ import (
 
 const (
 	SessionUserIDKey = "session_user_id" // Key used to store the user ID in the session
+	SessionIsMobileKey = "is_mobile"
 )
 
 type UserRepository interface {
@@ -46,13 +47,14 @@ func (s *AuthService) IsUserSignedIn(r *http.Request) bool {
 	return ok
 }
 
-func (s *AuthService) SignInUser(w http.ResponseWriter, r *http.Request, userID uint) error {
+func (s *AuthService) SignInUser(w http.ResponseWriter, r *http.Request, userID uint, isMobile bool) error {
 	session, err := s.sessionStore.GetStore().Get(r, s.config.SessionName)
 	if err != nil {
 		return err
 	}
 
 	session.Values[SessionUserIDKey] = userID
+	session.Values[SessionIsMobileKey] = isMobile
 	return session.Save(r, w)
 }
 
@@ -226,4 +228,18 @@ func (s *AuthService) GetUserIDFromSession(r *http.Request) (uint, error) {
 
 func (s *AuthService) GetUserByID(id uint) (*models.User, error) {
 	return s.userRepo.FindByID(id)
+}
+
+func (s *AuthService) IsUserMobile(r *http.Request) (bool, error) {
+	session, err := s.sessionStore.GetStore().Get(r, s.config.SessionName)
+	if err != nil {
+		return false, err
+	}
+
+	isMobile, ok := session.Values[SessionIsMobileKey].(bool)
+	if !ok {
+		return false, nil
+	}
+
+	return isMobile, nil
 }

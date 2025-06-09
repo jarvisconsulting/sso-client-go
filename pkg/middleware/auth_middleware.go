@@ -54,3 +54,17 @@ func (m *AuthMiddleware) SetUserID() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func (m *AuthMiddleware) SetIsMobile() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session, err := m.sessionStore.GetStore().Get(c.Request, m.sessionName)
+		if err == nil {
+			if isMobile, ok := session.Values[auth.SessionIsMobileKey].(bool); ok {
+				c.Set("is_mobile", isMobile)
+			} else {
+				c.Set("is_mobile", false)
+			}
+		}
+		c.Next()
+	}
+}
