@@ -33,6 +33,7 @@ type Middleware struct {
 	RequireAuth gin.HandlerFunc
 	SetUserID   gin.HandlerFunc
 	Session     gin.HandlerFunc
+	SetIsMobile gin.HandlerFunc
 }
 
 func New(cfg *config.Config) (*Client, error) {
@@ -87,6 +88,7 @@ func (c *Client) GetMiddleware() *Middleware {
 	return &Middleware{
 		RequireAuth: authMiddleware.RequireAuth(),
 		SetUserID:   authMiddleware.SetUserID(),
+		SetIsMobile: authMiddleware.SetIsMobile(),
 		Session:     sessionMiddleware.Handler(),
 	}
 }
