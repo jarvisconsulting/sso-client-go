@@ -71,7 +71,7 @@ func (h *Handler) Callback(c *gin.Context) {
 		log.Printf("Using redirect_for for authentication")
 	}
 
-	isMobile := redirectFor == "mobile" || redirectFor == "is_web_app"
+	isMobile := redirectFor == "mobile" || redirectFor == "in_app_web"
 	endpoint := c.Query("endpoint")
 
 	userID, err := h.authService.HandleCallback(params)
