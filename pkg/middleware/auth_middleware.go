@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -61,8 +62,10 @@ func (m *AuthMiddleware) SetIsMobile() gin.HandlerFunc {
 		if err == nil {
 			if isMobile, ok := session.Values[auth.SessionIsMobileKey].(bool); ok {
 				c.Set("is_mobile", isMobile)
+				c.Header("Is-Mobile", strconv.FormatBool(isMobile))
 			} else {
 				c.Set("is_mobile", false)
+				c.Header("Is-Mobile", "false")
 			}
 		}
 		c.Next()
