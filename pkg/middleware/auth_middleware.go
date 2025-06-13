@@ -28,16 +28,13 @@ func (m *AuthMiddleware) RequireAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session, err := m.sessionStore.GetStore().Get(c.Request, m.sessionName)
 		if err != nil {
-			c.Redirect(http.StatusFound, m.signInURL)
-			c.Abort()
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
 
 		_, ok := session.Values[auth.SessionUserIDKey]
 		if !ok {
-			c.Redirect(http.StatusFound, m.signInURL)
-			c.Abort()
-			return
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 		}
 
 		c.Next()
