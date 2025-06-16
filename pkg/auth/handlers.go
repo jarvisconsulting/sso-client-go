@@ -39,7 +39,7 @@ func (h *Handler) SignIn(c *gin.Context) {
 
 func (h *Handler) SignOut(c *gin.Context) {
 	if !h.authService.IsUserSignedIn(c.Request) {
-		c.Redirect(http.StatusFound, h.config.RootURL)
+		c.Redirect(http.StatusFound, h.config.SignInURL)
 		return
 	}
 
