@@ -38,7 +38,11 @@ func (h *Handler) SignIn(c *gin.Context) {
 }
 
 func (h *Handler) SignOut(c *gin.Context) {
-	log.Printf("Signing out user")
+	if !h.authService.IsUserSignedIn(c.Request) {
+		c.Redirect(http.StatusFound, h.config.RootURL)
+		return
+	}
+
 	err := h.authService.SignOutUser(c.Writer, c.Request)
 	if err != nil {
 		log.Printf("Failed to sign out: %v", err)
